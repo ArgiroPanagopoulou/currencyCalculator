@@ -39,7 +39,7 @@
                 theme: "bootstrap"
             });
 
-            // Form validations by JQuery validator 
+            // Form validations by JQuery validator
             form.validate({
                 rules: {
                     'currency_calculator[amount]': {
@@ -52,7 +52,7 @@
                     var targetCurrency = $('#currency_calculator_targetCurrency').val();
                     var amount = $('#currency_calculator_amount').val();
                     // Connect to API for retrieving current exchange rates
-                    var url = 'http://api.fixer.io/latest?base=' + baseCurrency;
+                    var url = 'https://api.fixer.io/latest?base=' + baseCurrency;
 
                     $.ajax({
                         url: url,
