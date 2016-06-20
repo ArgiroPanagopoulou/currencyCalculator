@@ -9,7 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\CurrencyType as CurrencyValidator
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 
 /**
- *
+ * Currency calculator form
  */
 class CurrencyCalculatorType extends AbstractType
 {
@@ -19,7 +19,7 @@ class CurrencyCalculatorType extends AbstractType
             ->add('baseCurrency', CurrencyValidator::class, array(
                 'placeholder' => '- Choose a currency -',
                 'choice_label' => function ($value, $key, $index) {
-                    return $key.' ('.$value.')';
+                    return $key.' ('.$value.')'; 
                 },
                 'preferred_choices' => array('USD', 'EUR', 'GBP', 'CHF', 'JPY', 'CAD'),
             ))

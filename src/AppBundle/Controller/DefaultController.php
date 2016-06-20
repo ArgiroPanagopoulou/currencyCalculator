@@ -15,12 +15,14 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
+        // Initialize the form object
         $currencyCalculator = new CurrencyCalculator();
 
         $form = $this->createForm(CurrencyCalculatorType::class, $currencyCalculator);
         $form->handleRequest($request);
 
         if($form->isValid()) {
+            return $this->redirectToRoute('homepage');
         }
         return $this->render('default/index.html.twig', array(
             'form' => $form->createView(),

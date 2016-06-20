@@ -20,6 +20,7 @@
             {{ form_end(form) }}
         </div>
         <div class="col-md-5 col-md-offset-2">
+            <!-- Placeholder for ajax response -->
             <div id="calculated_amount"></div>
             <div class="pull-right" id="date">
 
@@ -38,13 +39,14 @@
                 theme: "bootstrap"
             });
 
-            // Form validations
+            // Form validations by JQuery validator 
             form.validate({
                 rules: {
                     'currency_calculator[amount]': {
                         number: true
                     }
                 },
+                // Form submission
                 submitHandler: function(form) {
                     var baseCurrency = $('#currency_calculator_baseCurrency').val();
                     var targetCurrency = $('#currency_calculator_targetCurrency').val();
@@ -63,13 +65,13 @@
                             } else {
                                 calculated_amount = (amount * exchangeRate).toFixed(2);
                             }
-
+                            // Converted value is inserted to placeholder div
                             var info = calculated_amount + ' ' + targetCurrency;
                             $('#calculated_amount').html(info).removeClass().addClass('alert alert-info');
                             $('#date').html('<small>Last Updated: ' + result.date + '</small>');
                         }
                     });
-
+                    // Handler for ajax error
                     $(document).ajaxError(function(){
                         $('#calculated_amount').html('No exchange rates found for base currency').addClass('alert alert-danger');
                     });
