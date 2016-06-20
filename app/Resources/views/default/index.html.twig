@@ -1,0 +1,80 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Currency Calculator</h1><hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            {{ form_start(form, {'attr': {'id': 'currency_form', 'novalidate': 'novalidate'}}) }}
+                {{ form_row(form.baseCurrency) }}
+                {{ form_row(form.targetCurrency) }}
+                {{ form_row(form.amount) }}
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-primary">Calculate</button>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+        <div class="col-md-5 col-md-offset-2">
+            <div id="calculated_amount"></div>
+            <div class="pull-right" id="date">
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            var form = $('#currency_form');
+
+            // Searchable dropdowns
+            $('#currency_calculator_baseCurrency, #currency_calculator_targetCurrency').select2({
+                theme: "bootstrap"
+            });
+
+            // Form validations
+            form.validate({
+                rules: {
+                    'currency_calculator[amount]': {
+                        number: true
+                    }
+                },
+                submitHandler: function(form) {
+                    var baseCurrency = $('#currency_calculator_baseCurrency').val();
+                    var targetCurrency = $('#currency_calculator_targetCurrency').val();
+                    var amount = $('#currency_calculator_amount').val();
+                    // Connect to API for retrieving current exchange rates
+                    var url = 'http://api.fixer.io/latest?base=' + baseCurrency;
+
+                    $.ajax({
+                        url: url,
+                        dataType: 'jsonp',
+                        success: function(result) {
+                            var exchangeRate = result.rates[targetCurrency];
+                            var calculated_amount = '';
+                            if (typeof exchangeRate == 'undefined') {
+                                calculated_amount = '-';
+                            } else {
+                                calculated_amount = (amount * exchangeRate).toFixed(2);
+                            }
+
+                            var info = calculated_amount + ' ' + targetCurrency;
+                            $('#calculated_amount').html(info).removeClass().addClass('alert alert-info');
+                            $('#date').html('<small>Last Updated: ' + result.date + '</small>');
+                        }
+                    });
+
+                    $(document).ajaxError(function(){
+                        $('#calculated_amount').html('No exchange rates found for base currency').addClass('alert alert-danger');
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}
